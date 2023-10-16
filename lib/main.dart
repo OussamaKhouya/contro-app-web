@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/controllers/custom_menu_controller.dart';
+import 'package:flutter_web/controllers/navigation_controller.dart';
 import 'package:flutter_web/layout.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   Get.put(CustomMenuController());
-  runApp( MyApp());
+  Get.put(NavigationController());
+  runApp( const MyApp());
 }
 
 
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
           ).apply(
               bodyColor: Colors.black
           ),
-          pageTransitionsTheme: PageTransitionsTheme(builders: {
+          pageTransitionsTheme: const PageTransitionsTheme(builders: {
             TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
             TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
           }),
