@@ -73,7 +73,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
             width: 24,
           ),
 
-          CustomText(text: "Santos Enoque", color: lightGrey,),
+          CustomText(text: "Ali Motakil", color: lightGrey,),
 
           SizedBox(
             width: 16,
@@ -94,5 +94,5 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
       ),
 
       iconTheme: IconThemeData(color: dark),
-      backgroundColor: light,
+      backgroundColor: Colors.transparent,
     );

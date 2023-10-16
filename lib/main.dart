@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/controllers/custom_menu_controller.dart';
 import 'package:flutter_web/controllers/navigation_controller.dart';
 import 'package:flutter_web/layout.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Dash",
       theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: light,
           textTheme: GoogleFonts.mulishTextTheme(
               Theme.of(context).textTheme
           ).apply(
