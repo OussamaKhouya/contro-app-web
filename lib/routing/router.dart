@@ -1,19 +1,18 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_web/pages/clients/clients.dart';
-import 'package:flutter_web/pages/drivers/drivers.dart';
+import 'package:flutter_web/pages/cmd/cmd.dart';
 import 'package:flutter_web/pages/overview/overview.dart';
 import 'package:flutter_web/routing/routes.dart';
 
+import 'package:flutter_web/pages/gallery/gallery.dart';
+
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case OverViewPageRoute:
+    case HomePageRoute:
       return _getPageRoute(OverViewPage());
-    case DriversPageRoute:
-      return _getPageRoute(DriversPage());
-    case ClientsPageRoute:
-      return _getPageRoute(ClientsPage());
+    case CmdPageRoute:
+      return _getPageRoute(CmdPage());
+    case GalleryPageRoute:
+      return _getPageRoute(GalleryPage());
     default:
       return _getPageRoute(OverViewPage());
   }

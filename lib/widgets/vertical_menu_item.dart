@@ -63,7 +63,6 @@ class VerticalMenuItem extends StatelessWidget {
         ],
       ),
     )),
-
     );
   }
 }

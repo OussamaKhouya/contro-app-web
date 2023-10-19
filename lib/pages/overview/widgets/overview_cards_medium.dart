@@ -15,7 +15,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
         Row(
           children: [
             InfoCard(
-              title: "Rides in progress",
+              title: "En attentes",
               value: "7",
               onTap: () {},
               topColor: Colors.orange,
@@ -24,7 +24,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
               width: _width / 64,
             ),
             InfoCard(
-              title: "Packages delivered",
+              title: "Livrées",
               value: "17",
               onTap: () {},
               topColor: Colors.lightGreen,
@@ -38,7 +38,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
         Row(
           children: [
             InfoCard(
-              title: "Cancelled delivery",
+              title: "Annulée",
               value: "3",
               onTap: () {},
               topColor: Colors.redAccent,
@@ -47,7 +47,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
               width: _width / 64,
             ),
             InfoCard(
-              title: "Scheduled deliveries",
+              title: "En cours de préparation",
               value: "3",
               onTap: () {},
             ),
