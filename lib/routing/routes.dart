@@ -1,4 +1,4 @@
-const RootRoute = "/administration";
+const RootRoute = "/";
 
 const HomePageDisplayName = "Accueil";
 const HomePageRoute = "/accueil";

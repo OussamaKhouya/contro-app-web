@@ -184,7 +184,7 @@ class _RelevantCmdsState extends State<CmdTable> {
           DataCell(Row(
             children: [
               IconButton(
-                  icon: const Icon(Icons.more_vert, color: active),
+                  icon: const Icon(Icons.remove_red_eye, color: active),
                   onPressed: () {
                     cmdController.selectedNumpiece(commande.numpiece);
                     menuController.changeActiveitemTo(GalleryPageDisplayName);
@@ -193,7 +193,7 @@ class _RelevantCmdsState extends State<CmdTable> {
               Visibility(
                 visible: commande.ver,
                 child: IconButton(
-                    icon: const Icon(Icons.lock_open_outlined, color: active),
+                    icon: const Icon(Icons.lock_open_outlined, color: red),
                     onPressed: () => unlockCommande(commande)),
               ),
             ],

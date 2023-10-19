@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/constants/controllers.dart';
 import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/helpers/responsiveness.dart';
-import 'package:flutter_web/pages/authentication/authentication.dart';
+import 'package:flutter_web/pages/authentication/core/authentication_manager.dart';
 import 'package:flutter_web/routing/routes.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 import 'package:flutter_web/widgets/side_menu_item.dart';
 import 'package:get/get.dart';
 
 class SideMenu extends StatelessWidget {
+  late final AuthenticationManager _authManager = Get.find();
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -53,8 +54,10 @@ class SideMenu extends StatelessWidget {
             onTap: (){
               if(item.route == AuthenticationPageRoute){
                 menuController.changeActiveitemTo(HomePageDisplayName);
+                _authManager.logOut();
                 Get.offAllNamed(AuthenticationPageRoute);
               }
+
 
               if(!menuController.isActive(item.name)){
                 menuController.changeActiveitemTo(item.name);

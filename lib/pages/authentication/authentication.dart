@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/layout.dart';
+import 'package:flutter_web/pages/authentication/login_view_model.dart';
 import 'package:flutter_web/routing/routes.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AuthenticationPage extends StatelessWidget {
+class AuthenticationPage extends StatefulWidget {
+  const AuthenticationPage({super.key});
+
+  @override
+  State<AuthenticationPage> createState() => _AuthenticationPageState();
+}
+
+class _AuthenticationPageState extends State<AuthenticationPage> {
+
+  final GlobalKey<FormState> formKey = GlobalKey();
+  LoginViewModel _viewModel = Get.put(LoginViewModel());
+
+  TextEditingController emailCtr = TextEditingController();
+  TextEditingController passwordCtr = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +29,10 @@ class AuthenticationPage extends StatelessWidget {
           child: Container(
             constraints: BoxConstraints(maxWidth: 400),
             padding: EdgeInsets.all(24),
-            child: Column(
+            child: Form(
+                key: formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
@@ -49,7 +67,8 @@ class AuthenticationPage extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                TextField(
+                TextFormField(
+                  controller: emailCtr,
                   decoration: InputDecoration(
                       labelText: "Nom d\'utilisateur",
                       hintText: "ahmed123",
@@ -60,7 +79,8 @@ class AuthenticationPage extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                TextField(
+                TextFormField(
+                  controller: passwordCtr,
                   obscureText: true,
                   decoration: InputDecoration(
                       labelText: "Mot de passe",
@@ -72,8 +92,11 @@ class AuthenticationPage extends StatelessWidget {
                   height: 15,
                 ),
                 InkWell(
-                  onTap: () {
-                    Get.offAllNamed(RootRoute);
+                  onTap: () async  {
+                    if (formKey.currentState?.validate() ?? false) {
+                      await _viewModel.loginUser(emailCtr.text, passwordCtr.text);
+                    }
+                    // Get.offAllNamed(RootRoute);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -92,7 +115,7 @@ class AuthenticationPage extends StatelessWidget {
                 SizedBox(height: 15,),
 
               ],
-            ),
+            )),
           )),
     );
   }
