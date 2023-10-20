@@ -1,9 +1,18 @@
 class LoginResponseModel {
   String? token;
+  String? name;
+  String? username;
+  String? role;
 
-  LoginResponseModel({this.token});
+  LoginResponseModel({this.name, this.username, this.role,this.token});
 
-  LoginResponseModel.fromJson(Map<String, dynamic> json) {
-    token = json['token'];
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
+    return LoginResponseModel(
+        name: json['name'],
+        username: json['username'],
+        role : json['role'],
+        token : json['token']
+    );
   }
+
 }

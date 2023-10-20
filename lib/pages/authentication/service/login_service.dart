@@ -20,6 +20,8 @@ class LoginService extends GetConnect {
     });
 
     if (response.statusCode == HttpStatus.ok) {
+      print("response.body");
+      print(response.body);
       return LoginResponseModel.fromJson(response.body);
     } else {
       return null;

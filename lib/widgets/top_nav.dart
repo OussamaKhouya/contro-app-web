@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/helpers/responsiveness.dart';
+import 'package:flutter_web/pages/authentication/model/login_response_model.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 
-AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
+AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key, Rx<LoginResponseModel>? currUser) =>
+
+
     AppBar(
       leading: !ResponsiveWidget.isSmallScreen(context)
           ? Row(
@@ -73,7 +77,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
             width: 24,
           ),
 
-          CustomText(text: "Ali Motakil", color: lightGrey,),
+          CustomText(text: currUser?.value.name ?? "User" , color: lightGrey,),
 
           SizedBox(
             width: 16,

@@ -13,23 +13,29 @@ import 'package:flutter_web/exception/with_error_exception.dart';
 import 'package:flutter_web/helpers/toast.dart';
 import 'package:flutter_web/models/user.dart';
 import 'package:flutter_web/models/ligne_c.dart';
+import 'package:flutter_web/pages/authentication/core/authentication_manager.dart';
 import 'package:http/http.dart' as http;
 import '../models/commande.dart';
+import 'package:get/get.dart';
 
 class ApiService {
   late String token;
   bool showSpinner = false;
   late User currUser;
   var client = http.Client();
+  AuthenticationManager _authManager = Get.find();
+  ApiService(){
+    token = _authManager.token.value!;
+  }
 
-  // ApiService(this.token);
 
   final String baseurl = "http://192.168.1.100:4300/api";
 
 
   Future<List<Commande>> fetchCommands() async {
+      print("token");
+      print(token);
 
-    token = "177|UxRdbsvHWMkEj6ZY6ZjYfhlKOuvfWkE7BWW1kTpn";
     http.Response response = await client.get(Uri.parse('$baseurl/commandes'),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -43,7 +49,6 @@ class ApiService {
 
   Future<Commande> unlockCommande(Commande cmd) async{
     String uri = '$baseurl/commandes/${cmd.numpiece}';
-    token = "177|UxRdbsvHWMkEj6ZY6ZjYfhlKOuvfWkE7BWW1kTpn";
 
     http.Response response;
 
@@ -58,7 +63,6 @@ class ApiService {
             'ver' : 0,
           })
       );
-       print(response.statusCode);
       if (response.statusCode != 200) {
         await _handleOtherCases(response);
       }
@@ -124,7 +128,6 @@ class ApiService {
 
 
   Future<List<LigneC>> fetchLigneC(String numpiece) async {
-    token = "177|UxRdbsvHWMkEj6ZY6ZjYfhlKOuvfWkE7BWW1kTpn";
     http.Response response = await http.post(Uri.parse('${baseurl}/ligne-commandes/search'),
             headers: {
               HttpHeaders.contentTypeHeader: 'application/json', //important
@@ -148,7 +151,7 @@ class ApiService {
   }
 
   Future<List<String>> getImagesUrl(String numpiece, String numero) async {
-    token = "177|UxRdbsvHWMkEj6ZY6ZjYfhlKOuvfWkE7BWW1kTpn";
+
     http.Response response =
     await http.get(Uri.parse('$baseurl/file/check/$numpiece/$numero'), headers: {
       HttpHeaders.acceptHeader: 'application/json',

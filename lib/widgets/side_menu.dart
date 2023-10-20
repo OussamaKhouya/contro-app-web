@@ -39,11 +39,8 @@ class SideMenu extends StatelessWidget {
                   SizedBox(width: _width / 48,)
                 ],
               ),
-
-
             ],
           ),
-
 
         Divider(color: lightGrey.withOpacity(.1),),
 
@@ -51,13 +48,12 @@ class SideMenu extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: sideMenuItems.map((item) => SideMenuItem(
             itemName: item.name,
-            onTap: (){
+            onTap: () {
               if(item.route == AuthenticationPageRoute){
                 menuController.changeActiveitemTo(HomePageDisplayName);
                 _authManager.logOut();
                 Get.offAllNamed(AuthenticationPageRoute);
               }
-
 
               if(!menuController.isActive(item.name)){
                 menuController.changeActiveitemTo(item.name);

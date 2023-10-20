@@ -20,6 +20,13 @@ class _RelevantCmdsState extends State<RelevantCmds> {
   var isLoaded = false;
 
   @override
+  void setState(fn) {
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     getData();
     super.initState();
@@ -158,7 +165,6 @@ class _RelevantCmdsState extends State<RelevantCmds> {
     );
   }
 
-
   List<DataRow> generateDataRows(List<Commande> commandeList) {
     return commandeList.map((commande) {
       return DataRow(
@@ -173,7 +179,6 @@ class _RelevantCmdsState extends State<RelevantCmds> {
                 child: IconButton(
                     icon: const Icon(Icons.lock_open_outlined, color: red),
                     onPressed: () => unlockCommande(commande)),
-
               )
           ),
         ],

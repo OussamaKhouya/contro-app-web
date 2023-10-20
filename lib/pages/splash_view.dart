@@ -21,10 +21,11 @@ class SplashView extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return waitingView();
         } else {
-          if (snapshot.hasError)
+          if (snapshot.hasError) {
             return errorView(snapshot);
-          else
-            return OnBoard();
+          } else {
+            return const OnBoard();
+          }
         }
       },
     );

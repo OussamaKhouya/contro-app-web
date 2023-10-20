@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/pages/authentication/core/authentication_manager.dart';
 import 'package:flutter_web/pages/authentication/model/login_request_model.dart';
 import 'package:flutter_web/pages/authentication/service/login_service.dart';
@@ -18,13 +19,27 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> loginUser(String email, String password) async {
-    final response = await _loginService
+    final userResponse = await _loginService
         .fetchLogin(LoginRequestModel(username: email, password: password));
-
-    if (response != null) {
+    print("userResponse");
+    print(userResponse);
+    if (userResponse != null) {
       /// Set isLogin to true
-      _authManager.login(response.token);
-      Get.offAllNamed(RootRoute);
+      if(userResponse.role == "ADMIN"){
+        _authManager.login(userResponse);
+        Get.offAllNamed(RootRoute);
+      }else {
+        Get.defaultDialog(
+            backgroundColor: light,
+            title: "Message",
+            middleText: 'vous n\'êtes pas autorisé à vous connecter',
+            textConfirm: 'OK',
+            confirmTextColor: Colors.white,
+            onConfirm: () {
+              Get.back();
+            });
+      }
+
     } else {
       /// Show user a dialog about the error response
       Get.defaultDialog(
