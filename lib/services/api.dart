@@ -12,10 +12,10 @@ import 'package:flutter_web/exception/unknown_exception.dart';
 import 'package:flutter_web/exception/with_error_exception.dart';
 import 'package:flutter_web/helpers/toast.dart';
 import 'package:flutter_web/models/user.dart';
-import 'package:flutter_web/models/ligne_c.dart';
+import 'package:flutter_web/models/lcmd.dart';
 import 'package:flutter_web/pages/authentication/core/authentication_manager.dart';
 import 'package:http/http.dart' as http;
-import '../models/commande.dart';
+import '../models/cmd.dart';
 import 'package:get/get.dart';
 
 class ApiService {
@@ -29,13 +29,10 @@ class ApiService {
   }
 
 
-  final String baseurl = "http://192.168.1.100:4300/api";
+  final String baseurl = kApiBaseUrl;
 
 
-  Future<List<Commande>> fetchCommands() async {
-      print("token");
-      print(token);
-
+  Future<List<Cmd>> fetchReleventCommands() async {
     http.Response response = await client.get(Uri.parse('$baseurl/commandes'),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -43,12 +40,58 @@ class ApiService {
           HttpHeaders.authorizationHeader: 'Bearer $token'
         });
     List commandes = jsonDecode(response.body);
-    return commandes.map((commande) => Commande.fromJson(commande)).toList();
+    return commandes.map((commande) => Cmd.fromJson(commande)).toList();
   }
 
 
-  Future<Commande> unlockCommande(Commande cmd) async{
-    String uri = '$baseurl/commandes/${cmd.numpiece}';
+  Future<List<Cmd>> fetchAllCommands() async {
+    http.Response response = await client.get(Uri.parse('$baseurl/commandes/all'),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        });
+    List commandes = jsonDecode(response.body);
+    return commandes.map((commande) => Cmd.fromJson(commande)).toList();
+  }
+
+  Future<List<Cmd>> fetchCmdsByNupiDate(String? numpiece, String? date) async {
+    http.Response response = await http.post(Uri.parse('${baseurl}/commandes/search'),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json', //important
+          HttpHeaders.acceptHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+        body: jsonEncode({
+          'bcc_nupi': numpiece,
+          'bcc_dat': date,
+        })
+    );
+    if (response.statusCode == 200) {
+      List Cmds = jsonDecode(response.body);
+      if(Cmds.isEmpty){
+        return [];
+      }
+      return Cmds.map((cmd) => Cmd.fromJson(cmd)).toList();
+    } else {
+      String errorMessage = 'no data found';
+      throw Exception(errorMessage);
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchStats() async {
+    http.Response response = await client.get(Uri.parse('$baseurl/commandes/stats'),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        });
+    return jsonDecode(response.body);
+  }
+
+
+  Future<Cmd> unlockCommande(Cmd cmd) async{
+    String uri = '$baseurl/commandes/${cmd.bcc_nupi}';
 
     http.Response response;
 
@@ -60,7 +103,7 @@ class ApiService {
             HttpHeaders.authorizationHeader: 'Bearer $token'
           },
           body: jsonEncode({
-            'ver' : 0,
+            'bcc_val' : 0,
           })
       );
       if (response.statusCode != 200) {
@@ -73,7 +116,7 @@ class ApiService {
       throw e;
     }
 
-    return Commande.fromJson(jsonDecode(response.body));
+    return Cmd.fromJson(jsonDecode(response.body));
   }
 
   Future<void> _handleOtherCases(http.Response response,) async {
@@ -127,7 +170,7 @@ class ApiService {
   }
 
 
-  Future<List<LigneC>> fetchLigneC(String numpiece) async {
+  Future<List<LCmd>> fetchLigneC(String numpiece) async {
     http.Response response = await http.post(Uri.parse('${baseurl}/ligne-commandes/search'),
             headers: {
               HttpHeaders.contentTypeHeader: 'application/json', //important
@@ -135,7 +178,7 @@ class ApiService {
               HttpHeaders.authorizationHeader: 'Bearer $token'
             },
             body: jsonEncode({
-              'numpiece': numpiece,
+              'a_bcc_nupi': numpiece,
             })
         );
     if (response.statusCode == 200) {
@@ -143,7 +186,7 @@ class ApiService {
       if(ligneCmd.isEmpty){
         return [];
       }
-      return ligneCmd.map((ligneC) => LigneC.fromJson(ligneC)).toList();
+      return ligneCmd.map((ligneC) => LCmd.fromJson(ligneC)).toList();
     } else {
       String errorMessage = 'no data found';
       throw Exception(errorMessage);

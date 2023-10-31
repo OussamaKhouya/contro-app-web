@@ -1,14 +1,16 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_web/constants/controllers.dart';
 import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/controllers/commande_controller.dart';
-import 'package:flutter_web/models/commande.dart';
+import 'package:flutter_web/models/cmd.dart';
 import 'package:flutter_web/routing/routes.dart';
 import 'package:flutter_web/services/api.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 import 'package:flutter_web/widgets/heading_text.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class CmdTable extends StatefulWidget {
   const CmdTable({super.key});
@@ -19,8 +21,12 @@ class CmdTable extends StatefulWidget {
 
 class _RelevantCmdsState extends State<CmdTable> {
   final CommandeController cmdController = Get.put(CommandeController());
-  late List<Commande> cmdList;
+  late List<Cmd> cmdList;
   var isLoaded = false;
+  String errorMessage = '';
+  final _formKey = GlobalKey<FormState>();
+  final inputSearch = TextEditingController();
+  final transactionDateController = TextEditingController();
 
   @override
   void initState() {
@@ -29,7 +35,15 @@ class _RelevantCmdsState extends State<CmdTable> {
   }
 
   getData() async {
-    cmdList = await ApiService().fetchCommands();
+    cmdList = await ApiService().fetchAllCommands();
+    if (cmdList != null) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+  }
+  getDataByNupiDate() async {
+    cmdList = await ApiService().fetchCmdsByNupiDate(cmdController.selectedNumpiece.value,transactionDateController.text);
     if (cmdList != null) {
       setState(() {
         isLoaded = true;
@@ -56,6 +70,95 @@ class _RelevantCmdsState extends State<CmdTable> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Form(
+                                key: _formKey,
+                                child: Column(children: [
+                                  TextFormField(
+                                      controller: inputSearch,
+                                      decoration: InputDecoration(
+                                        labelText: "Numero de piece",
+                                        hintText: "K076920949",
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      validator: (String? value) {
+                                        if (value!.isEmpty) {
+                                          setState(() => errorMessage =
+                                          'Entrer un numero de piece valide');
+                                          return 'Entrer un numero de piece valide';
+                                        }
+                                        return null;
+                                      },
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
+                                      ],
+                                      onChanged: (text) =>
+                                          setState(() => errorMessage = '')),
+                                  const SizedBox(height: 15),
+                                  TextFormField(
+                                      controller: transactionDateController,
+                                    onTap: () {
+                                      selectDate(context);
+                                    },
+                                      decoration: InputDecoration(
+                                        labelText: "date",
+                                        hintText: "date",
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                      ),
+
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
+                                      ],
+                                      onChanged: (text) =>
+                                          setState(() => errorMessage = '')),
+                                  ])),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              cmdController.selectedNumpiece(inputSearch.text);
+                              getDataByNupiDate();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.all(20),
+                              backgroundColor: active, // Background color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text("Rechercher"),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        errorMessage,
+                        style: const TextStyle(color: Colors.red),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+
           const Row(
             children: [
               SizedBox(
@@ -111,7 +214,7 @@ class _RelevantCmdsState extends State<CmdTable> {
     );
   }
 
-  unlockCmd(Commande cmd) {
+  unlockCmd(Cmd cmd) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -124,7 +227,7 @@ class _RelevantCmdsState extends State<CmdTable> {
           content: Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              "Voulez-vous vraiment deverrouiller la commande : ${cmd.numpiece} ?",
+              "Voulez-vous vraiment deverrouiller la commande : ${cmd.bcc_nupi} ?",
               style: TextStyle(
                 color: dark,
                 fontWeight: FontWeight.bold,
@@ -134,9 +237,9 @@ class _RelevantCmdsState extends State<CmdTable> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                Commande updatedCmd = await ApiService().unlockCommande(cmd);
+                Cmd updatedCmd = await ApiService().unlockCommande(cmd);
                 setState(() {
-                  cmd.ver = updatedCmd.ver; // Assuming cmd.ver is boolean
+                  cmd.bcc_val = updatedCmd.bcc_val; // Assuming cmd.ver is boolean
                 });
                 Navigator.of(context).pop();
               },
@@ -173,25 +276,25 @@ class _RelevantCmdsState extends State<CmdTable> {
     );
   }
 
-  List<DataRow> generateDataRows(List<Commande> commandeList) {
+  List<DataRow> generateDataRows(List<Cmd> commandeList) {
     return commandeList.map((commande) {
       return DataRow(
         cells: [
-          DataCell(CustomText(text: commande.numpiece)),
-          DataCell(CustomText(text: commande.client)),
-          DataCell(CustomText(text: commande.etat)),
-          DataCell(CustomText(text: commande.date)),
+          DataCell(CustomText(text: commande.bcc_nupi)),
+          DataCell(CustomText(text: commande.bcc_lcli)),
+          DataCell(CustomText(text: commande.bcc_eta)),
+          DataCell(CustomText(text: commande.bcc_dat)),
           DataCell(Row(
             children: [
               IconButton(
                   icon: const Icon(Icons.remove_red_eye, color: active),
                   onPressed: () {
-                    cmdController.selectedNumpiece(commande.numpiece);
+                    cmdController.selectedNumpiece(commande.bcc_nupi);
                     menuController.changeActiveitemTo(GalleryPageDisplayName);
                     navigationController.navigateTo(GalleryPageRoute);
                   }),
               Visibility(
-                visible: commande.ver,
+                visible: commande.bcc_val,
                 child: IconButton(
                     icon: const Icon(Icons.lock_open_outlined, color: red),
                     onPressed: () => unlockCommande(commande)),
@@ -203,7 +306,21 @@ class _RelevantCmdsState extends State<CmdTable> {
     }).toList();
   }
 
-  unlockCommande(Commande commande) {
+  unlockCommande(Cmd commande) {
     unlockCmd(commande);
+  }
+
+  Future selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: DateTime(DateTime.now().year + 5)
+    );
+    if (picked != null) {
+      setState(() {
+        transactionDateController.text = DateFormat('dd-MM-yyyy HH:mm:ss').format(picked);
+      });
+    }
   }
 }

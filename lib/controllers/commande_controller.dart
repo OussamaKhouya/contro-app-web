@@ -1,10 +1,10 @@
-import 'package:flutter_web/models/commande.dart';
+import 'package:flutter_web/models/cmd.dart';
 import 'package:get/get.dart';
 
 class CommandeController extends GetxController {
 
   static CommandeController instance = Get.find();
-  var cmdList = <Commande>[].obs;
+  var cmdList = <Cmd>[].obs;
   var selectedNumpiece = "".obs;
   var selectedNumero = "".obs;
 

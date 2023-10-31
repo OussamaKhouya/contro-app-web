@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/controllers/commande_controller.dart';
-import 'package:flutter_web/models/commande.dart';
-import 'package:flutter_web/models/ligne_c.dart';
+import 'package:flutter_web/models/cmd.dart';
+import 'package:flutter_web/models/lcmd.dart';
 import 'package:flutter_web/services/api.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 import 'package:flutter_web/widgets/heading_text.dart';
@@ -21,7 +21,7 @@ class GalleryTable extends StatefulWidget {
 class _RelevantCmdsState extends State<GalleryTable> {
   final CommandeController cmdController = Get.find();
   final CommandeController cmdControllerPut = Get.put(CommandeController());
-  List<LigneC> lcList = [];
+  List<LCmd> lcList = [];
   var isLoaded = false;
   Future<List<String>>? listOfUrls;
   final inputSearch = TextEditingController();
@@ -58,73 +58,7 @@ class _RelevantCmdsState extends State<GalleryTable> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Form(
-                              key: _formKey,
-                              child: TextFormField(
-                                  controller: inputSearch,
-                                  decoration: InputDecoration(
-                                    labelText: "Numero de piece",
-                                    hintText: "K076920949",
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  validator: (String? value) {
-                                    if (value!.isEmpty) {
-                                      setState(() => errorMessage =
-                                          'Entrer un numero de piece valide');
-                                      return 'Entrer un numero de piece valide';
-                                    }
-                                    return null;
-                                  },
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
-                                  ],
-                                  onChanged: (text) =>
-                                      setState(() => errorMessage = ''))),
-                        ),
-                        const SizedBox(width: 10),
-                        ElevatedButton(
-                          onPressed: () {
-                            cmdController.selectedNumpiece(inputSearch.text);
-                            getData();
-                            clearGallery();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(20),
-                            backgroundColor: active, // Background color
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          child: const Text("Rechercher"),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+
         const SizedBox(
           height: 10,
         ),
@@ -242,7 +176,7 @@ class _RelevantCmdsState extends State<GalleryTable> {
     );
   }
 
-  unlockCmd(Commande cmd) {
+  unlockCmd(Cmd cmd) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -255,7 +189,7 @@ class _RelevantCmdsState extends State<GalleryTable> {
           content: Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              "Voulez-vous vraiment verrouiller la commande : ${cmd.numpiece} ?",
+              "Voulez-vous vraiment verrouiller la commande : ${cmd.bcc_nupi} ?",
               style: const TextStyle(
                 color: dark,
                 fontWeight: FontWeight.bold,
@@ -265,9 +199,9 @@ class _RelevantCmdsState extends State<GalleryTable> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                Commande updatedCmd = await ApiService().unlockCommande(cmd);
+                Cmd updatedCmd = await ApiService().unlockCommande(cmd);
                 setState(() {
-                  cmd.ver = updatedCmd.ver; // Assuming cmd.ver is boolean
+                  cmd.bcc_val = updatedCmd.bcc_val; // Assuming cmd.ver is boolean
                 });
                 Navigator.of(context).pop();
               },
@@ -304,20 +238,20 @@ class _RelevantCmdsState extends State<GalleryTable> {
     );
   }
 
-  List<DataRow> generateDataRows(List<LigneC> lcmdList) {
+  List<DataRow> generateDataRows(List<LCmd> lcmdList) {
     return lcmdList.map((lc) {
       return DataRow(
         cells: [
-          DataCell(CustomText(text: lc.numero)),
-          DataCell(CustomText(text: lc.designation)),
-          DataCell(CustomText(text: lc.quantite)),
-          DataCell(CustomText(text: lc.nbrPhoto)),
+          DataCell(CustomText(text: lc.a_bcc_num)),
+          DataCell(CustomText(text: lc.a_bcc_lib)),
+          DataCell(CustomText(text: lc.a_bcc_qua)),
+          DataCell(CustomText(text: (double.parse(lc.nph1) + double.parse(lc.nph2) + double.parse(lc.phb) + double.parse(lc.phc)).toString())),
           DataCell(Visibility(
             visible: true,
             child: IconButton(
                 icon: const Icon(Icons.image, color: active),
                 onPressed: () {
-                  cmdController.selectedNumero(lc.numero);
+                  cmdController.selectedNumero(lc.a_bcc_num);
                   loadGallery();
                 }),
           )),

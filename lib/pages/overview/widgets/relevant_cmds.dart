@@ -5,7 +5,7 @@ import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/services/api.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 
-import 'package:flutter_web/models/commande.dart';
+import 'package:flutter_web/models/cmd.dart';
 import 'package:flutter_web/widgets/heading_text.dart';
 
 class RelevantCmds extends StatefulWidget {
@@ -16,7 +16,7 @@ class RelevantCmds extends StatefulWidget {
 }
 
 class _RelevantCmdsState extends State<RelevantCmds> {
-  late List<Commande> cmdList;
+  late List<Cmd> cmdList;
   var isLoaded = false;
 
   @override
@@ -33,7 +33,7 @@ class _RelevantCmdsState extends State<RelevantCmds> {
   }
 
   getData() async {
-      cmdList = await ApiService().fetchCommands();
+      cmdList = await ApiService().fetchReleventCommands();
       if(cmdList != null){
         setState(() {
           isLoaded = true;
@@ -51,7 +51,7 @@ class _RelevantCmdsState extends State<RelevantCmds> {
         borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.only(bottom: 30),
+      margin: const EdgeInsets.symmetric(vertical: 30),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -107,7 +107,7 @@ class _RelevantCmdsState extends State<RelevantCmds> {
     );
   }
 
-  unlockCmd(Commande cmd) {
+  unlockCmd(Cmd cmd) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -120,7 +120,7 @@ class _RelevantCmdsState extends State<RelevantCmds> {
           content: Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              "Voulez-vous vraiment verrouiller la commande : ${cmd.numpiece} ?",
+              "Voulez-vous vraiment verrouiller la commande : ${cmd.bcc_nupi} ?",
               style: TextStyle(
                 color: dark,
                 fontWeight: FontWeight.bold,
@@ -165,17 +165,17 @@ class _RelevantCmdsState extends State<RelevantCmds> {
     );
   }
 
-  List<DataRow> generateDataRows(List<Commande> commandeList) {
+  List<DataRow> generateDataRows(List<Cmd> commandeList) {
     return commandeList.map((commande) {
       return DataRow(
         cells: [
-          DataCell(CustomText(text: commande.numpiece)),
-          DataCell(CustomText(text: commande.client)),
-          DataCell(CustomText(text: commande.etat)),
-          DataCell(CustomText(text: commande.date)),
+          DataCell(CustomText(text: commande.bcc_nupi)),
+          DataCell(CustomText(text: commande.bcc_lcli)),
+          DataCell(CustomText(text: commande.bcc_eta.toLowerCase())),
+          DataCell(CustomText(text: commande.bcc_dat)),
           DataCell(
               Visibility(
-                visible: commande.ver,
+                visible: commande.bcc_val,
                 child: IconButton(
                     icon: const Icon(Icons.lock_open_outlined, color: red),
                     onPressed: () => unlockCommande(commande)),
@@ -186,14 +186,14 @@ class _RelevantCmdsState extends State<RelevantCmds> {
     }).toList();
   }
 
-  unlockCommande(Commande commande) {
+  unlockCommande(Cmd commande) {
     unlockCmd(commande);
   }
 
-  void updateCmd(Commande cmd) async {
-    Commande updatedCmd = await ApiService().unlockCommande(cmd);
+  void updateCmd(Cmd cmd) async {
+    Cmd updatedCmd = await ApiService().unlockCommande(cmd);
     setState(() {
-      cmd.ver = updatedCmd.ver;
+      cmd.bcc_val = updatedCmd.bcc_val;
       getData();
     });
 

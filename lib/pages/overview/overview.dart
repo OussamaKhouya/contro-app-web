@@ -42,12 +42,7 @@ class OverViewPage extends StatelessWidget {
                 else
                   OverviewCardsSmallScreen(),
 
-                if(!ResponsiveWidget.isSmallScreen(context))
-                  RevenueSectionLarge()
-                else
-                  RevenueSectionSmall(),
-
-                RelevantCmds()
+                const RelevantCmds()
               ],
             )),
       ],

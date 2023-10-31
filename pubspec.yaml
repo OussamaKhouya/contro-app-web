@@ -42,6 +42,7 @@ dependencies:
   fluttertoast: ^8.2.2
   galleryimage: 2.0.1
   get_storage: ^2.0.3
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
