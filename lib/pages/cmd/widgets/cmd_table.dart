@@ -7,7 +7,7 @@ import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/controllers/commande_controller.dart';
 import 'package:flutter_web/models/cmd.dart';
 import 'package:flutter_web/pages/cmd/widgets/custom_dialog.dart';
-import 'package:flutter_web/pages/cmd/widgets/other_details.dart';
+import 'package:flutter_web/pages/cmd/widgets/cmd_details.dart';
 import 'package:flutter_web/routing/routes.dart';
 import 'package:flutter_web/services/api.dart';
 import 'package:flutter_web/widgets/custom_sel_text.dart';
@@ -19,13 +19,16 @@ import 'package:intl/intl.dart';
 import '../../authentication/core/authentication_manager.dart';
 
 class CmdTable extends StatefulWidget {
-  const CmdTable({super.key});
+  final bool showSearchForm;
+
+  const CmdTable({super.key, required bool this.showSearchForm});
 
   @override
   State<CmdTable> createState() => _RelevantCmdsState();
 }
 
 class _RelevantCmdsState extends State<CmdTable> {
+
   final CommandeController cmdController = Get.put(CommandeController());
   late List<Cmd> cmdList;
   var isLoaded = false;
@@ -43,7 +46,11 @@ class _RelevantCmdsState extends State<CmdTable> {
   }
 
   getData() async {
-    cmdList = await ApiService().fetchAllCommands();
+    if(widget.showSearchForm){
+      cmdList = await ApiService().fetchAllCommands();
+    }else{
+      cmdList = await ApiService().fetchReleventCommands();
+    }
     if (cmdList != null) {
       setState(() {
         isLoaded = true;
@@ -66,7 +73,9 @@ class _RelevantCmdsState extends State<CmdTable> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
+          Visibility(
+            visible: widget.showSearchForm,
+            child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(color: active.withOpacity(.4), width: .5),
@@ -79,7 +88,6 @@ class _RelevantCmdsState extends State<CmdTable> {
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.only(bottom: 30),
             child:Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -94,49 +102,49 @@ class _RelevantCmdsState extends State<CmdTable> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                controller: inputSearch,
-                                decoration: InputDecoration(
-                                  labelText: "Numero de piece",
-                                  hintText: "K076920949",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                  controller: inputSearch,
+                                  decoration: InputDecoration(
+                                    labelText: "Numero de piece",
+                                    hintText: "K076920949",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
                                   ),
-                                ),
-                                validator: (String? value) {
-                                  if (value!.isEmpty) {
-                                    setState(() => errorMessage =
-                                    'Entrer un numero de piece valide');
-                                    return 'Entrer un numero de piece valide';
-                                  }
-                                  return null;
-                                },
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
-                                ],
-                                onChanged: (text) =>
-                                    setState(() => errorMessage = '')),),
+                                  validator: (String? value) {
+                                    if (value!.isEmpty) {
+                                      setState(() => errorMessage =
+                                      'Entrer un numero de piece valide');
+                                      return 'Entrer un numero de piece valide';
+                                    }
+                                    return null;
+                                  },
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
+                                  ],
+                                  onChanged: (text) =>
+                                      setState(() => errorMessage = '')),),
                             SizedBox(width: 20,),
                             Expanded(
                               child: TextFormField(
-                                controller: transactionDateController,
-                                onTap: () {
-                                  selectDate(context);
-                                },
-                                decoration: InputDecoration(
-                                  labelText: "date",
-                                  hintText: "date",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                  controller: transactionDateController,
+                                  onTap: () {
+                                    selectDate(context);
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: "date",
+                                    hintText: "date",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
                                   ),
-                                ),
 
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
-                                ],
-                                onChanged: (text) =>
-                                    setState(() => errorMessage = '')),),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
+                                  ],
+                                  onChanged: (text) =>
+                                      setState(() => errorMessage = '')),),
                             SizedBox(width: 20,),
                             ElevatedButton(
                               onPressed: () {
@@ -159,7 +167,7 @@ class _RelevantCmdsState extends State<CmdTable> {
                 ),
               ],
             ),
-          ),
+          ),),
 
           Container(
             decoration: BoxDecoration(
@@ -174,7 +182,7 @@ class _RelevantCmdsState extends State<CmdTable> {
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.only(bottom: 30),
+            margin: const EdgeInsets.only(top: 30),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -329,6 +337,7 @@ class _RelevantCmdsState extends State<CmdTable> {
                     showDetails(context, commande);
                   },
                   tooltip: "Plus d\'informations"),
+              SizedBox(width: 20,),
               IconButton(
                   icon: const Icon(Icons.remove_red_eye, color: active),
                   onPressed: () {
@@ -337,6 +346,7 @@ class _RelevantCmdsState extends State<CmdTable> {
                     navigationController.navigateTo(GalleryPageRoute);
                   },
                   tooltip: "Details articles"),
+              SizedBox(width: 20,),
               Visibility(
                 visible: commande.bcc_val && (commande.bcc_eta == StatusConstants.TERMINE) ,
                 child: IconButton(

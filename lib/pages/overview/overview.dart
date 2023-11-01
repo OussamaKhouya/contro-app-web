@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/constants/controllers.dart';
 import 'package:flutter_web/helpers/responsiveness.dart';
+import 'package:flutter_web/pages/cmd/widgets/cmd_table.dart';
 import 'package:flutter_web/pages/overview/widgets/overview_cards_large.dart';
 import 'package:flutter_web/pages/overview/widgets/overview_cards_medium.dart';
 import 'package:flutter_web/pages/overview/widgets/overview_cards_small.dart';
@@ -40,7 +41,7 @@ class OverViewPage extends StatelessWidget {
                 else
                   OverviewCardsSmallScreen(),
 
-                const RelevantCmds()
+                const CmdTable(showSearchForm:false)
               ],
             )),
       ],

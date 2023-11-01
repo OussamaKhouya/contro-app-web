@@ -33,7 +33,7 @@ class ApiService {
 
 
   Future<List<Cmd>> fetchReleventCommands() async {
-    http.Response response = await client.get(Uri.parse('$baseurl/commandes'),
+    http.Response response = await client.get(Uri.parse('$baseurl/commandes/new'),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
           HttpHeaders.acceptHeader: 'application/json',

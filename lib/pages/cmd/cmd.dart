@@ -28,7 +28,7 @@ class CmdPage extends StatelessWidget {
         Expanded(child:
         ListView(
           children: const [
-            CmdTable()
+            CmdTable(showSearchForm:true)
             // PaginatedDataTableDemo()
           ],
         ))
