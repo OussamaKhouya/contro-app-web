@@ -56,26 +56,18 @@ int _idCounter = 0;
 /// Domain model entity
 class Dessert {
   Dessert(
-    this.name,
-    this.calories,
-    this.fat,
-    this.carbs,
-    this.protein,
-    this.sodium,
-    this.calcium,
-    this.iron,
+    this.bcc_nupi,
+    this.bcc_dat,
+    this.bcc_lcli,
+    this.bcc_eta,
   );
 
   final int id = _idCounter++;
 
-  final String name;
-  final int calories;
-  final double fat;
-  final int carbs;
-  final double protein;
-  final int sodium;
-  final int calcium;
-  final int iron;
+  final String bcc_nupi;
+  final int bcc_dat;
+  final double bcc_lcli;
+  final int bcc_eta;
   bool selected = false;
 }
 
@@ -95,7 +87,7 @@ class DessertDataSource extends DataTableSource {
       this.hasZebraStripes = false]) {
     desserts = _desserts;
     if (sortedByCalories) {
-      sort((d) => d.calories, true);
+      sort((d) => d.bcc_dat, true);
     }
   }
 
@@ -159,34 +151,30 @@ class DessertDataSource extends DataTableSource {
         }
       },
       onTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Tapped on row ${dessert.name}')
+          ? () => _showSnackbar(context, 'Tapped on row ${dessert.bcc_nupi}')
           : null,
       onDoubleTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Double Tapped on row ${dessert.name}')
+          ? () => _showSnackbar(context, 'Double Tapped on row ${dessert.bcc_nupi}')
           : null,
       onLongPress: hasRowTaps
-          ? () => _showSnackbar(context, 'Long pressed on row ${dessert.name}')
+          ? () => _showSnackbar(context, 'Long pressed on row ${dessert.bcc_nupi}')
           : null,
       onSecondaryTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Right clicked on row ${dessert.name}')
+          ? () => _showSnackbar(context, 'Right clicked on row ${dessert.bcc_nupi}')
           : null,
       onSecondaryTapDown: hasRowTaps
           ? (d) =>
-              _showSnackbar(context, 'Right button down on row ${dessert.name}')
+              _showSnackbar(context, 'Right button down on row ${dessert.bcc_nupi}')
           : null,
       specificRowHeight:
-          hasRowHeightOverrides && dessert.fat >= 25 ? 100 : null,
+          hasRowHeightOverrides && dessert.bcc_lcli >= 25 ? 100 : null,
       cells: [
-        DataCell(Text(dessert.name)),
-        DataCell(Text('${dessert.calories}'),
+        DataCell(Text(dessert.bcc_nupi)),
+        DataCell(Text('${dessert.bcc_dat}'),
             onTap: () => _showSnackbar(context,
-                'Tapped on a cell with "${dessert.calories}"', Colors.red)),
-        DataCell(Text(dessert.fat.toStringAsFixed(1))),
-        DataCell(Text('${dessert.carbs}')),
-        DataCell(Text(dessert.protein.toStringAsFixed(1))),
-        DataCell(Text('${dessert.sodium}')),
-        DataCell(Text(format.format(dessert.calcium / 100))),
-        DataCell(Text(format.format(dessert.iron / 100))),
+                'Tapped on a cell with "${dessert.bcc_dat}"', Colors.red)),
+        DataCell(Text(dessert.bcc_lcli.toStringAsFixed(1))),
+        DataCell(Text('${dessert.bcc_eta}')),
       ],
     );
   }
@@ -291,14 +279,10 @@ class DessertDataSourceAsync extends AsyncDataTableSource {
               }
             },
             cells: [
-              DataCell(Text(dessert.name)),
-              DataCell(Text('${dessert.calories}')),
-              DataCell(Text(dessert.fat.toStringAsFixed(1))),
-              DataCell(Text('${dessert.carbs}')),
-              DataCell(Text(dessert.protein.toStringAsFixed(1))),
-              DataCell(Text('${dessert.sodium}')),
-              DataCell(Text(format.format(dessert.calcium / 100))),
-              DataCell(Text(format.format(dessert.iron / 100))),
+              DataCell(Text(dessert.bcc_nupi)),
+              DataCell(Text('${dessert.bcc_dat}')),
+              DataCell(Text(dessert.bcc_lcli.toStringAsFixed(1))),
+              DataCell(Text('${dessert.bcc_eta}')),
             ],
           );
         }).toList());
@@ -323,22 +307,14 @@ class DesertsFakeWebService {
     var coef = ascending ? 1 : -1;
     switch (column) {
       case 'name':
-        return (Dessert d1, Dessert d2) => coef * d1.name.compareTo(d2.name);
+        return (Dessert d1, Dessert d2) => coef * d1.bcc_nupi.compareTo(d2.bcc_nupi);
       case 'calories':
-        return (Dessert d1, Dessert d2) => coef * (d1.calories - d2.calories);
+        return (Dessert d1, Dessert d2) => coef * (d1.bcc_dat - d2.bcc_dat);
       case 'fat':
-        return (Dessert d1, Dessert d2) => coef * (d1.fat - d2.fat).round();
+        return (Dessert d1, Dessert d2) => coef * (d1.bcc_lcli - d2.bcc_lcli).round();
       case 'carbs':
-        return (Dessert d1, Dessert d2) => coef * (d1.carbs - d2.carbs);
-      case 'protein':
-        return (Dessert d1, Dessert d2) =>
-            coef * (d1.protein - d2.protein).round();
+        return (Dessert d1, Dessert d2) => coef * (d1.bcc_eta - d2.bcc_eta);
       case 'sodium':
-        return (Dessert d1, Dessert d2) => coef * (d1.sodium - d2.sodium);
-      case 'calcium':
-        return (Dessert d1, Dessert d2) => coef * (d1.calcium - d2.calcium);
-      case 'iron':
-        return (Dessert d1, Dessert d2) => coef * (d1.iron - d2.iron);
     }
 
     return null;
@@ -358,8 +334,8 @@ class DesertsFakeWebService {
       if (caloriesFilter != null) {
         result = result
             .where((e) =>
-                e.calories >= caloriesFilter.start &&
-                e.calories <= caloriesFilter.end)
+                e.bcc_dat >= caloriesFilter.start &&
+                e.bcc_dat <= caloriesFilter.end)
             .toList();
       }
 
@@ -378,308 +354,193 @@ List<Dessert> _desserts = <Dessert>[
     159,
     6.0,
     24,
-    4.0,
-    87,
-    14,
-    1,
   ),
   Dessert(
     'Ice Cream Sandwich',
     237,
     9.0,
     37,
-    4.3,
-    129,
-    8,
-    1,
+
   ),
   Dessert(
     'Eclair',
     262,
     16.0,
     24,
-    6.0,
-    337,
-    6,
-    7,
+
   ),
   Dessert(
     'Cupcake',
     305,
     3.7,
     67,
-    4.3,
-    413,
-    3,
-    8,
   ),
   Dessert(
     'Gingerbread',
     356,
     16.0,
     49,
-    3.9,
-    327,
-    7,
-    16,
+
   ),
   Dessert(
     'Jelly Bean',
     375,
     0.0,
     94,
-    0.0,
-    50,
-    0,
-    0,
+
   ),
   Dessert(
     'Lollipop',
     392,
     0.2,
     98,
-    0.0,
-    38,
-    0,
-    2,
   ),
   Dessert(
     'Honeycomb',
     408,
     3.2,
     87,
-    6.5,
-    562,
-    0,
-    45,
   ),
   Dessert(
     'Donut',
     452,
     25.0,
     51,
-    4.9,
-    326,
-    2,
-    22,
   ),
   Dessert(
     'Apple Pie',
     518,
     26.0,
     65,
-    7.0,
-    54,
-    12,
-    6,
   ),
   Dessert(
     'Frozen Yougurt with sugar',
     168,
     6.0,
     26,
-    4.0,
-    87,
-    14,
-    1,
   ),
   Dessert(
     'Ice Cream Sandich with sugar',
     246,
     9.0,
     39,
-    4.3,
-    129,
-    8,
-    1,
   ),
   Dessert(
     'Eclair with sugar',
     271,
     16.0,
     26,
-    6.0,
-    337,
-    6,
-    7,
   ),
   Dessert(
     'Cupcake with sugar',
     314,
     3.7,
     69,
-    4.3,
-    413,
-    3,
-    8,
   ),
   Dessert(
     'Gingerbread with sugar',
     345,
     16.0,
     51,
-    3.9,
-    327,
-    7,
-    16,
   ),
   Dessert(
     'Jelly Bean with sugar',
     364,
     0.0,
     96,
-    0.0,
-    50,
-    0,
-    0,
   ),
   Dessert(
     'Lollipop with sugar',
     401,
     0.2,
     100,
-    0.0,
-    38,
-    0,
-    2,
   ),
   Dessert(
     'Honeycomd with sugar',
     417,
     3.2,
     89,
-    6.5,
-    562,
-    0,
-    45,
   ),
   Dessert(
     'Donut with sugar',
     461,
     25.0,
     53,
-    4.9,
-    326,
-    2,
-    22,
   ),
   Dessert(
     'Apple pie with sugar',
     527,
     26.0,
     67,
-    7.0,
-    54,
-    12,
-    6,
   ),
   Dessert(
     'Forzen yougurt with honey',
     223,
     6.0,
     36,
-    4.0,
-    87,
-    14,
-    1,
   ),
   Dessert(
     'Ice Cream Sandwich with honey',
     301,
     9.0,
     49,
-    4.3,
-    129,
-    8,
-    1,
   ),
   Dessert(
     'Eclair with honey',
     326,
     16.0,
     36,
-    6.0,
-    337,
-    6,
-    7,
   ),
   Dessert(
     'Cupcake with honey',
     369,
     3.7,
     79,
-    4.3,
-    413,
-    3,
-    8,
   ),
   Dessert(
     'Gignerbread with hone',
     420,
     16.0,
     61,
-    3.9,
-    327,
-    7,
-    16,
   ),
   Dessert(
     'Jelly Bean with honey',
     439,
     0.0,
     106,
-    0.0,
-    50,
-    0,
-    0,
   ),
   Dessert(
     'Lollipop with honey',
     456,
     0.2,
     110,
-    0.0,
-    38,
-    0,
-    2,
   ),
   Dessert(
     'Honeycomd with honey',
     472,
     3.2,
     99,
-    6.5,
-    562,
-    0,
-    45,
   ),
   Dessert(
     'Donut with honey',
     516,
     25.0,
     63,
-    4.9,
-    326,
-    2,
-    22,
   ),
   Dessert(
     'Apple pie with honey',
     582,
     26.0,
     77,
-    7.0,
-    54,
-    12,
-    6,
+
   ),
 ];
 
 List<Dessert> _dessertsX3 = _desserts.toList()
-  ..addAll(_desserts.map((i) => Dessert('${i.name} x2', i.calories, i.fat,
-      i.carbs, i.protein, i.sodium, i.calcium, i.iron)))
-  ..addAll(_desserts.map((i) => Dessert('${i.name} x3', i.calories, i.fat,
-      i.carbs, i.protein, i.sodium, i.calcium, i.iron)));
+  ..addAll(_desserts.map((i) => Dessert('${i.bcc_nupi} x2', i.bcc_dat, i.bcc_lcli,
+      i.bcc_eta)))
+  ..addAll(_desserts.map((i) => Dessert('${i.bcc_nupi} x3', i.bcc_dat, i.bcc_lcli,
+      i.bcc_eta)));
 
 _showSnackbar(BuildContext context, String text, [Color? color]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

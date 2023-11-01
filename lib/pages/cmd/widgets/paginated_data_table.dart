@@ -45,28 +45,16 @@ class PaginatedDataTableDemoState extends State<PaginatedDataTableDemo>
     }
     switch (_sortColumnIndex.value) {
       case 0:
-        _dessertsDataSource.sort<String>((d) => d.name, _sortAscending.value);
+        _dessertsDataSource.sort<String>((d) => d.bcc_nupi, _sortAscending.value);
         break;
       case 1:
-        _dessertsDataSource.sort<num>((d) => d.calories, _sortAscending.value);
+        _dessertsDataSource.sort<num>((d) => d.bcc_dat, _sortAscending.value);
         break;
       case 2:
-        _dessertsDataSource.sort<num>((d) => d.fat, _sortAscending.value);
+        _dessertsDataSource.sort<num>((d) => d.bcc_lcli, _sortAscending.value);
         break;
       case 3:
-        _dessertsDataSource.sort<num>((d) => d.carbs, _sortAscending.value);
-        break;
-      case 4:
-        _dessertsDataSource.sort<num>((d) => d.protein, _sortAscending.value);
-        break;
-      case 5:
-        _dessertsDataSource.sort<num>((d) => d.sodium, _sortAscending.value);
-        break;
-      case 6:
-        _dessertsDataSource.sort<num>((d) => d.calcium, _sortAscending.value);
-        break;
-      case 7:
-        _dessertsDataSource.sort<num>((d) => d.iron, _sortAscending.value);
+        _dessertsDataSource.sort<num>((d) => d.bcc_eta, _sortAscending.value);
         break;
     }
     _dessertsDataSource.updateSelectedDesserts(_dessertSelections);
@@ -132,49 +120,25 @@ class PaginatedDataTableDemoState extends State<PaginatedDataTableDemo>
         DataColumn(
           label: const Text('Desert'),
           onSort: (columnIndex, ascending) =>
-              sort<String>((d) => d.name, columnIndex, ascending),
+              sort<String>((d) => d.bcc_nupi, columnIndex, ascending),
         ),
         DataColumn(
           label: const Text('Calories'),
           numeric: true,
           onSort: (columnIndex, ascending) =>
-              sort<num>((d) => d.calories, columnIndex, ascending),
+              sort<num>((d) => d.bcc_dat, columnIndex, ascending),
         ),
         DataColumn(
           label: const Text('Fat (gm)'),
           numeric: true,
           onSort: (columnIndex, ascending) =>
-              sort<num>((d) => d.fat, columnIndex, ascending),
+              sort<num>((d) => d.bcc_lcli, columnIndex, ascending),
         ),
         DataColumn(
           label: const Text('Carbs (gm)'),
           numeric: true,
           onSort: (columnIndex, ascending) =>
-              sort<num>((d) => d.carbs, columnIndex, ascending),
-        ),
-        DataColumn(
-          label: const Text('Protein (gm)'),
-          numeric: true,
-          onSort: (columnIndex, ascending) =>
-              sort<num>((d) => d.protein, columnIndex, ascending),
-        ),
-        DataColumn(
-          label: const Text('Sodium (mg)'),
-          numeric: true,
-          onSort: (columnIndex, ascending) =>
-              sort<num>((d) => d.sodium, columnIndex, ascending),
-        ),
-        DataColumn(
-          label: const Text('Calcium (%)'),
-          numeric: true,
-          onSort: (columnIndex, ascending) =>
-              sort<num>((d) => d.calcium, columnIndex, ascending),
-        ),
-        DataColumn(
-          label: const Text('Iron (%)'),
-          numeric: true,
-          onSort: (columnIndex, ascending) =>
-              sort<num>((d) => d.iron, columnIndex, ascending),
+              sort<num>((d) => d.bcc_eta, columnIndex, ascending),
         ),
       ],
       source: _dessertsDataSource,
