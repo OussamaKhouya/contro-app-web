@@ -25,25 +25,25 @@ class LoginViewModel extends GetxController {
     print(userResponse);
     if (userResponse != null) {
       /// Set isLogin to true
-      if(userResponse.role == "ADMIN"){
+      // if(userResponse.role == "ADMIN"){
         _authManager.login(userResponse);
         Get.offAllNamed(RootRoute);
-      }else {
-        Get.defaultDialog(
-            backgroundColor: light,
-            title: "Message",
-            middleText: 'vous n\'êtes pas autorisé à vous connecter',
-            textConfirm: 'OK',
-            confirmTextColor: Colors.white,
-            onConfirm: () {
-              Get.back();
-            });
-      }
+      // }else {
+      //   Get.defaultDialog(
+      //       backgroundColor: light,
+      //       title: "Message",
+      //       middleText: 'vous n\'êtes pas autorisé à vous connecter',
+      //       textConfirm: 'OK',
+      //       confirmTextColor: Colors.white,
+      //       onConfirm: () {
+      //         Get.back();
+      //       });
+      // }
 
     } else {
       /// Show user a dialog about the error response
       Get.defaultDialog(
-          middleText: 'Identifiant ou mdf incorrect!',
+          middleText: 'Identifiant ou mot de passe incorrect!',
           textConfirm: 'OK',
           confirmTextColor: Colors.white,
           onConfirm: () {

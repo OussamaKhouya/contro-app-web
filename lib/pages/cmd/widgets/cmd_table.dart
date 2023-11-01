@@ -16,6 +16,8 @@ import 'package:flutter_web/widgets/heading_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../authentication/core/authentication_manager.dart';
+
 class CmdTable extends StatefulWidget {
   const CmdTable({super.key});
 
@@ -31,6 +33,8 @@ class _RelevantCmdsState extends State<CmdTable> {
   final _formKey = GlobalKey<FormState>();
   final inputSearch = TextEditingController();
   final transactionDateController = TextEditingController();
+
+  final AuthenticationManager authenticationManager = Get.find();
 
   @override
   void initState() {
@@ -81,63 +85,59 @@ class _RelevantCmdsState extends State<CmdTable> {
               children: [
                 Center(
                   child: Container(
-                    constraints: const BoxConstraints(maxWidth: 400),
+                    constraints: const BoxConstraints(maxWidth: 600),
                     padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
+                    child: Form(
+                        key: _formKey,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
-                              child: Form(
-                                  key: _formKey,
-                                  child: Column(children: [
-                                    TextFormField(
-                                        controller: inputSearch,
-                                        decoration: InputDecoration(
-                                          labelText: "Numero de piece",
-                                          hintText: "K076920949",
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                        ),
-                                        validator: (String? value) {
-                                          if (value!.isEmpty) {
-                                            setState(() => errorMessage =
-                                            'Entrer un numero de piece valide');
-                                            return 'Entrer un numero de piece valide';
-                                          }
-                                          return null;
-                                        },
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
-                                        ],
-                                        onChanged: (text) =>
-                                            setState(() => errorMessage = '')),
-                                    const SizedBox(height: 15),
-                                    TextFormField(
-                                        controller: transactionDateController,
-                                        onTap: () {
-                                          selectDate(context);
-                                        },
-                                        decoration: InputDecoration(
-                                          labelText: "date",
-                                          hintText: "date",
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                        ),
+                              child: TextFormField(
+                                controller: inputSearch,
+                                decoration: InputDecoration(
+                                  labelText: "Numero de piece",
+                                  hintText: "K076920949",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                validator: (String? value) {
+                                  if (value!.isEmpty) {
+                                    setState(() => errorMessage =
+                                    'Entrer un numero de piece valide');
+                                    return 'Entrer un numero de piece valide';
+                                  }
+                                  return null;
+                                },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
+                                ],
+                                onChanged: (text) =>
+                                    setState(() => errorMessage = '')),),
+                            SizedBox(width: 20,),
+                            Expanded(
+                              child: TextFormField(
+                                controller: transactionDateController,
+                                onTap: () {
+                                  selectDate(context);
+                                },
+                                decoration: InputDecoration(
+                                  labelText: "date",
+                                  hintText: "date",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
 
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
-                                        ],
-                                        onChanged: (text) =>
-                                            setState(() => errorMessage = '')),
-                                  ])),
-                            ),
-                            const SizedBox(width: 10),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'^[a-zA-Z0-9\s.,_-]+$')),
+                                ],
+                                onChanged: (text) =>
+                                    setState(() => errorMessage = '')),),
+                            SizedBox(width: 20,),
                             ElevatedButton(
                               onPressed: () {
                                 cmdController.selectedNumpiece(inputSearch.text);
@@ -153,12 +153,7 @@ class _RelevantCmdsState extends State<CmdTable> {
                               child: const Text("Rechercher"),
                             ),
                           ],
-                        ),
-                        Text(
-                          errorMessage,
-                          style: const TextStyle(color: Colors.red),
                         )
-                      ],
                     ),
                   ),
                 ),
@@ -183,16 +178,30 @@ class _RelevantCmdsState extends State<CmdTable> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Row(
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 10,
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: CustomText(
+                        text: "List des Commandes",
+                        color: lightGrey,
+                        weight: FontWeight.bold,
+                        size: 20,
+                      ),
                     ),
-                    CustomText(
-                      text: "List des Commandes",
-                      color: lightGrey,
-                      weight: FontWeight.bold,
-                    ),
+                   Container(
+                     margin: EdgeInsets.symmetric(horizontal: 20),
+                     child:  IconButton(
+                         icon:  Icon(Icons.refresh, color: active,size: 30),
+                         onPressed: () {
+                           setState(() {
+                             isLoaded = false;
+                             getData();
+                           });
+                         }
+                     ),
+                   )
                   ],
                 ),
                 SizedBox(
@@ -225,7 +234,7 @@ class _RelevantCmdsState extends State<CmdTable> {
                           label: HeadingText(text: 'Date'),
                         ),
                         DataColumn(
-                          label: HeadingText(text: 'Action'),
+                          label: HeadingText(text: 'Actions'),
                         ),
                       ],
                       rows: generateDataRows(cmdList),
@@ -255,7 +264,7 @@ class _RelevantCmdsState extends State<CmdTable> {
           content: Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              "Voulez-vous vraiment deverrouiller la commande : ${cmd.bcc_nupi} ?",
+              "Voulez-vous vraiment déverrouiller la commande : ${cmd.bcc_nupi} ?",
               style: TextStyle(
                 color: dark,
                 fontWeight: FontWeight.bold,
@@ -315,22 +324,42 @@ class _RelevantCmdsState extends State<CmdTable> {
           DataCell(Row(
             children: [
               IconButton(
-                  icon: const Icon(Icons.unfold_more, color: active),
+                  icon: const Icon(Icons.unfold_more, color: dark),
                   onPressed: () {
                     showDetails(context, commande);
-                  }),
+                  },
+                  tooltip: "Plus d\'informations"),
               IconButton(
                   icon: const Icon(Icons.remove_red_eye, color: active),
                   onPressed: () {
                     cmdController.selectedNumpiece(commande.bcc_nupi);
                     menuController.changeActiveitemTo(GalleryPageDisplayName);
                     navigationController.navigateTo(GalleryPageRoute);
-                  }),
+                  },
+                  tooltip: "Details articles"),
               Visibility(
                 visible: commande.bcc_val && (commande.bcc_eta == StatusConstants.TERMINE) ,
                 child: IconButton(
-                    icon: const Icon(Icons.lock_open_outlined, color: red),
-                    onPressed: () => unlockCommande(commande)),
+                    icon: const Icon(Icons.lock_open_outlined, color: green),
+                    tooltip: "Déverrouiller la commande",
+                    onPressed: () {
+                      var currUser = authenticationManager.currUser?.value;
+                      if(currUser?.role == "ADMIN"){
+                      unlockCommande(commande);
+
+                      }else {
+                        Get.defaultDialog(
+                            backgroundColor: light,
+                            title: "Attention",
+                            middleText: 'vous n\'êtes pas autorisé à déverrouiller',
+                            textConfirm: 'OK',
+                            confirmTextColor: Colors.white,
+                            onConfirm: () {
+                              Get.back();
+                            });
+                      }
+
+                    }),
               ),
             ],
           )),

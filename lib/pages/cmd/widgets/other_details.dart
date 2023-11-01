@@ -21,33 +21,35 @@ class OtherDetails extends StatelessWidget {
 
     final _width = MediaQuery.of(context).size.width;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        const CloseButton(),
-        for (final _fieldValue in _fieldValues) ...[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SizedBox(
-                  width: _width * 0.1,
-                  child: CustomText(text: _fieldValue.key,weight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                SizedBox(
-                  width: _width * 0.1,
-                  child: CustomText(text:_fieldValue.value, color: dark),
-                )
-              ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const CloseButton(),
+          for (final _fieldValue in _fieldValues) ...[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(
+                    width: _width * 0.1,
+                    child: CustomText(text: _fieldValue.key,weight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  SizedBox(
+                    width: _width * 0.1,
+                    child: CustomText(text:_fieldValue.value, color: dark),
+                  )
+                ],
+              ),
             ),
-          ),
+          ],
         ],
-      ],
+      ),
     );
   }
 
