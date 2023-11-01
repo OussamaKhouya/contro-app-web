@@ -35,7 +35,7 @@ class _RelevantCmdsState extends State<CmdTable> {
   }
 
   getData() async {
-    cmdList = await ApiService().fetchAllCommands();
+    cmdList = await ApiService().fetchAllCmdPagination(1);
     if (cmdList != null) {
       setState(() {
         isLoaded = true;
@@ -205,6 +205,7 @@ class _RelevantCmdsState extends State<CmdTable> {
                         ),
                       ],
                       rows: generateDataRows(cmdList),
+
                     )
                   : const CustomText(text: 'problem serveur'),
             ),

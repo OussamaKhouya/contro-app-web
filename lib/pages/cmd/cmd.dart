@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/constants/controllers.dart';
 import 'package:flutter_web/helpers/responsiveness.dart';
+import 'package:flutter_web/pages/cmd/widgets/paginated_data_table.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
-import 'widgets/cmd_table.dart';
 
 class CmdPage extends StatelessWidget {
   @override
@@ -28,8 +27,9 @@ class CmdPage extends StatelessWidget {
 
         Expanded(child:
         ListView(
-          children: [
-            CmdTable()
+          children: const [
+            // CmdTable()
+            PaginatedDataTableDemo()
           ],
         ))
       ],

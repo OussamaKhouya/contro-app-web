@@ -55,6 +55,17 @@ class ApiService {
     return commandes.map((commande) => Cmd.fromJson(commande)).toList();
   }
 
+  Future<List<Cmd>> fetchAllCmdPagination(int index) async {
+    http.Response response = await client.get(Uri.parse('$baseurl/commandes/all?page=$index'),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        });
+    List commandes = jsonDecode(response.body)['data'];
+    return commandes.map((commande) => Cmd.fromJson(commande)).toList();
+  }
+
   Future<List<Cmd>> fetchCmdsByNupiDate(String? numpiece, String? date) async {
     http.Response response = await http.post(Uri.parse('${baseurl}/commandes/search'),
         headers: {
