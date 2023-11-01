@@ -5,8 +5,6 @@ import 'package:flutter_web/helpers/responsiveness.dart';
 import 'package:flutter_web/pages/overview/widgets/overview_cards_large.dart';
 import 'package:flutter_web/pages/overview/widgets/overview_cards_medium.dart';
 import 'package:flutter_web/pages/overview/widgets/overview_cards_small.dart';
-import 'package:flutter_web/pages/overview/widgets/revenue_section_large.dart';
-import 'package:flutter_web/pages/overview/widgets/revenue_section_small.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 

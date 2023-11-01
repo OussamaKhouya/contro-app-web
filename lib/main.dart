@@ -3,9 +3,8 @@ import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/controllers/commande_controller.dart';
 import 'package:flutter_web/controllers/custom_menu_controller.dart';
 import 'package:flutter_web/controllers/navigation_controller.dart';
-import 'package:flutter_web/layout.dart';
 import 'package:flutter_web/pages/404/error_page.dart';
-import 'package:flutter_web/pages/authentication/authentication.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web/pages/authentication/core/authentication_manager.dart';
 import 'package:flutter_web/pages/splash_view.dart';
 import 'package:flutter_web/routing/routes.dart';
@@ -49,6 +48,13 @@ class MyApp extends StatelessWidget {
           }),
           primaryColor: Colors.blue
       ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('en'),
+          const Locale('fr')
+        ]
       // home: SiteLayout(),
       // home: AuthenticationPage(),
     );
