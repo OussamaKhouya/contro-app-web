@@ -64,10 +64,9 @@ const String kRegExpPhone = "(\\+[0-9]+[\\- \\.]*)?(\\([0-9]+\\)[\\- \\.]*)?" +
 
 
 // API urls
-//const String kDevBaseUrl = 'http://149.28.209.208/azzoa/';
 const String kDevBaseUrl = 'http://192.168.1.6:4300/';
-const String kLiveBaseUrl = 'https://xyz.com/';
-const String kBaseUrl = kDevBaseUrl;
+const String kLiveBaseUrl = 'http://192.168.1.19:8000/';
+const String kBaseUrl = kLiveBaseUrl;
 const String kApiBaseUrl = kBaseUrl + 'api';
 
 

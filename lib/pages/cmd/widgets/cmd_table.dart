@@ -403,7 +403,7 @@ class _RelevantCmdsState extends State<CmdTable> {
     context: c,
     builder: (_) => CustomDialog(
     showPadding: false,
-    child: OtherDetails(data: data),
+    child: CmdDetails(data: data),
     ),
     );
   }

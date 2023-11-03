@@ -5,6 +5,8 @@ import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/controllers/commande_controller.dart';
 import 'package:flutter_web/models/cmd.dart';
 import 'package:flutter_web/models/lcmd.dart';
+import 'package:flutter_web/pages/cmd/widgets/custom_dialog.dart';
+import 'package:flutter_web/pages/cmd/widgets/lcmd_details.dart';
 import 'package:flutter_web/services/api.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 import 'package:flutter_web/widgets/heading_text.dart';
@@ -246,17 +248,39 @@ class _RelevantCmdsState extends State<GalleryTable> {
           DataCell(CustomText(text: lc.a_bcc_lib)),
           DataCell(CustomText(text: lc.a_bcc_qua)),
           DataCell(CustomText(text: (double.parse(lc.nph1) + double.parse(lc.nph2) + double.parse(lc.phb) + double.parse(lc.phc)).toString())),
-          DataCell(Visibility(
-            visible: true,
-            child: IconButton(
-                icon: const Icon(Icons.image, color: active),
-                onPressed: () {
-                  cmdController.selectedNumero(lc.a_bcc_num);
-                  loadGallery();
-                }),
-          )),
+          DataCell(
+              Row(children: [
+                IconButton(
+                    icon: const Icon(Icons.unfold_more, color: dark),
+                    onPressed: () {
+                      showDetails(context, lc);
+                    },
+                    tooltip: "Plus d\'informations"),
+                SizedBox(width: 20,),
+                IconButton(
+                    icon: const Icon(Icons.image, color: active),
+                    onPressed: () {
+                      cmdController.selectedNumero(lc.a_bcc_num);
+                      loadGallery();
+                    }),
+
+              ],)
+
+
+          ),
         ],
       );
     }).toList();
+  }
+
+
+  void showDetails(BuildContext c, LCmd data) async {
+    await showDialog<bool>(
+      context: c,
+      builder: (_) => CustomDialog(
+        showPadding: false,
+        child: LCmdDetails(data: data),
+      ),
+    );
   }
 }

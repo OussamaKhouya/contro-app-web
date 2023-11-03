@@ -3,14 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/constants/style.dart';
 import 'package:flutter_web/models/cmd.dart';
+import 'package:flutter_web/models/lcmd.dart';
 import 'package:flutter_web/widgets/custom_text.dart';
 
-class CmdDetails extends StatelessWidget {
-  const CmdDetails({Key? key, required this.data})
+class LCmdDetails extends StatelessWidget {
+  const LCmdDetails({Key? key, required this.data})
       : assert(data != null),
         super(key: key);
 
-  final Cmd data;
+  final LCmd data;
 
   Iterable<MapEntry<String, dynamic>> get _fieldValues =>
       _onGenerateFields(data).entries;
@@ -53,23 +54,25 @@ class CmdDetails extends StatelessWidget {
     );
   }
 
-  Map<String, String> _onGenerateFields(Cmd data) {
+  Map<String, String> _onGenerateFields(LCmd data) {
     final _fieldValues = {
-      "Numero de piece": data.bcc_nupi.toString(),
-      "Date": data.bcc_dat.toString(),
-      "Date de chargement 1": data.bcc_dach1.toString(),
-      "Date de chargement 2": data.bcc_dach2.toString(),
-      "Client": data.bcc_lcli,
-      "rep": data.bcc_lrep,
-      "Expert": data.bcc_lexp,
-      "vehicule": data.bcc_veh,
-      "Etat": data.bcc_eta,
-      "validé": data.bcc_val?"oui":"non",
-      "Operateur de saisie": data.bcc_usr_sai,
-      "Commercial": data.bcc_usr_com,
-      "Control 1": data.bcc_usr_con1,
-      "Control 2": data.bcc_usr_con2,
-      "Superviseur": data.bcc_usr_sup,
+      "Numero": data.a_bcc_num.toString(),
+      "Numero de piece": data.a_bcc_nupi.toString(),
+      "Description": data.a_bcc_lib.toString(),
+      "Depot": data.a_bcc_dep.toString(),
+      "Quantité": data.a_bcc_qua.toString(),
+      "Coefficient": data.a_bcc_coe.toString(),
+      "Boite": data.a_bcc_boi.toString(),
+      "Quantité chargé 1": data.a_bcc_quch1.toString(),
+      "Boite chargée 1": data.a_bcc_boch1.toString(),
+      "Observation 1": data.a_bcc_obs1.toString(),
+      "Quantité chargé 2": data.a_bcc_quch2.toString(),
+      "Boite chargée 2": data.a_bcc_boch2.toString(),
+      "Observation 2": data.a_bcc_obs2.toString(),
+      "Photo C1": data.nph1.toString(),
+      "Photo C2": data.nph2.toString(),
+      "Photo Camion": data.phc.toString(),
+      "Photo Bon": data.phb.toString(),
     };
 
     return _fieldValues;
